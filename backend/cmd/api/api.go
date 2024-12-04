@@ -56,19 +56,20 @@ func (app *application) mount() http.Handler {
 	r.Route("/api", func(r chi.Router) {
 
 
-		r.Post("/register", app.registerUserHandler)
-		r.Post("/login", app.LoginUserHandler)
+		r.Post("/register", app.registerUserHandler) // ok
+		r.Post("/login", app.LoginUserHandler) // ok
 		// r.Get("/image/{id}", )
 
 		// Products
 		r.Route("/products", func(r chi.Router){
 			// r.Get("/", )
 			// r.Get("/search", )
+			// r.Get("/sort", )
 			// r.Get("/{slug}", )
 
 			r.Route("/{slug}", func(r chi.Router) {
-				r.Use(app.AuthTokenMiddleware)
-				r.Use(app.AdminRoleMiddleware)
+				r.Use(app.AuthTokenMiddleware) // ok
+				r.Use(app.AdminRoleMiddleware) // ok
 
 				// r.Post("/", )
 				// r.Put("/", )
@@ -82,7 +83,6 @@ func (app *application) mount() http.Handler {
 			
 			// r.Get("/", )
 			// r.Get("/address", )
-			// r.Put("/address", )
 			// r.Get("/cart", )
 		})
 	})

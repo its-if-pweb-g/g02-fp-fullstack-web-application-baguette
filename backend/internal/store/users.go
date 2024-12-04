@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,18 +23,9 @@ type User struct {
 	Password []byte             `bson:"password" json:"password"`
 	Phone    string             `bson:"phone" json:"phone"`
 	Role     string             `bson:"role" json:"role"`
-	Addrres  UserAddress        `bson:"address" json:"address"`
+	Addrres  string             `bson:"address" json:"address"`
 }
 
-type UserAddress struct {
-	Label     string `bson:"label" json:"label"`
-	Recipient string `bson:"recipient" json:"recipient"`
-	Phone     string `bson:"phone" json:"phone"`
-	Message   string `bson:"message" json:"message"`
-	Street    string `bson:"street" json:"street"`
-	City      string `bson:"city" json:"city"`
-	Province  string `bson:"province" json:"province"`
-}
 
 type UserStore struct {
 	db *mongo.Client
@@ -87,3 +79,48 @@ func (s *UserStore) GetByEmail(ctx context.Context, email string) (*User, error)
 
 	return &result, nil
 }
+
+func (s *UserStore) GetByID(ctx context.Context, id string) (*User, error) {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	var result User
+
+	if err := s.db.Database(Database).Collection(UserCollection).FindOne(ctx, filter).Decode(&result); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+func (s *UserStore) GetUserAddress(ctx context.Context, id string) (string, error) {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", err
+	}
+
+	filter := bson.M{"_id": objectID}
+	projection := options.FindOne().SetProjection(bson.M{"address": 1, "_id": 0})
+
+	var result struct {
+		Address string `bson:"address"`
+	}
+
+	err = s.db.Database(Database).Collection(UserCollection).FindOne(ctx, filter, projection).Decode(&result)
+	if err != nil {
+		return "", err
+	}
+
+	return result.Address, nil
+}
+

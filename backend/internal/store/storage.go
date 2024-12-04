@@ -22,6 +22,7 @@ type Storage struct {
 	Users interface {
 		Create(context.Context, *User) (string, error)
 		GetByEmail(context.Context, string) (*User, error)
+		GetByID(context.Context, string) (*User, error)
 	}
 	Products interface {
 
