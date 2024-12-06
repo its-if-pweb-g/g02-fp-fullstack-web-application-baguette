@@ -69,6 +69,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 
 	claims := jwt.MapClaims{
 		"ID":  resultID,
+		"role": "user",
 		"exp": time.Now().Add(app.config.auth.exp).Unix(),
 		"iat": time.Now().Unix(),
 		"nbf": time.Now().Unix(),
@@ -113,6 +114,7 @@ func (app *application) LoginUserHandler(w http.ResponseWriter, r *http.Request)
 
 	claims := jwt.MapClaims{
 		"ID":  result.ID,
+		"role": result.Role,
 		"exp": time.Now().Add(app.config.auth.exp).Unix(),
 		"iat": time.Now().Unix(),
 		"nbf": time.Now().Unix(),

@@ -2,16 +2,15 @@ package store
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	
 )
 
-var ()
 
 type Product struct {
 	ID                string    `bson:"_id,omitempty" json:"id,omitempty"`
@@ -22,8 +21,9 @@ type Product struct {
 	Stock             int       `bson:"stock,omitempty" json:"stock"`
 	Sold              int       `bson:"sold,omitempty" json:"sold"`
 	Image             []byte    `bson:"image,omitempty" json:"image"`
-	CreatedAt         time.Time `bson:"created_at,omitempty" json:"created_at"` 
-	Category          []string  `bson:"category,omitempty" json:"category"`
+	CreatedAt         time.Time `bson:"created_at,omitempty" json:"created_at"`
+	Type              []string  `bson:"type,omitempty json:type"`
+	Flavor            []string  `bson:"flavor,omitempty" json:"flavor"`
 }
 
 type ProductStore struct {
@@ -69,7 +69,7 @@ func (p *ProductStore) GetBySort(ctx context.Context, token string, limit int) (
 	var result []Product
 	if err := cursor.All(ctx, &result); err != nil {
 		return nil, err
-	}	
+	}
 
 	return result, nil
 }
@@ -83,7 +83,7 @@ func (p *ProductStore) GetDetailProduct(ctx context.Context, id string) (*Produc
 		return nil, err
 	}
 
-	filter := bson.M{"_id" : objectID}
+	filter := bson.M{"_id": objectID}
 
 	var result Product
 	if err := p.db.Database(Database).Collection(ProductCollection).FindOne(ctx, filter).Decode(&result); err != nil {
@@ -99,7 +99,7 @@ func (p *ProductStore) CreateProduct(ctx context.Context, product *Product) (str
 
 	result, err := p.db.Database(Database).Collection(ProductCollection).InsertOne(ctx, product)
 	if err != nil {
-		return "", err 
+		return "", err
 	}
 
 	objectID, _ := result.InsertedID.(primitive.ObjectID)
@@ -115,7 +115,7 @@ func (p *ProductStore) UpdateProduct(ctx context.Context, product *Product, id s
 		return err
 	}
 
-	filter := bson.M{"_id" : objectID}
+	filter := bson.M{"_id": objectID}
 	update := bson.M{"$set": product}
 
 	if _, err := p.db.Database(Database).Collection(ProductCollection).UpdateOne(ctx, filter, update); err != nil {
@@ -134,7 +134,7 @@ func (p *ProductStore) DeleteProduct(ctx context.Context, id string) error {
 		return err
 	}
 
-	filter := bson.M{"_id" : objectID}
+	filter := bson.M{"_id": objectID}
 	if _, err := p.db.Database(Database).Collection(ProductCollection).DeleteOne(ctx, filter); err != nil {
 		return err
 	}
@@ -142,4 +142,68 @@ func (p *ProductStore) DeleteProduct(ctx context.Context, id string) error {
 	return nil
 }
 
+func (p *ProductStore) GetProductByFilter(ctx context.Context, q string, tipe []string, flavor []string, start int, end int) ([]Product, error) {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
 
+	filter := bson.M{}
+	opts := options.Find().SetProjection(bson.M{"image": 0})
+
+	if q != "" {
+		filter["$or"] = []bson.M{
+			{"name": bson.M{"$regex": q, "$options": "i"}},
+			{"description": bson.M{"$regex": q, "$options": "i"}},
+			{"header_description": bson.M{"$regex": q, "$options": "i"}},
+		}
+	}
+
+	if len(tipe) > 0 {
+		filter["type"] = bson.M{"$in": tipe}
+	}
+
+	if len(flavor) > 0 {
+		filter["flavor"] = bson.M{"$in": flavor}
+	}
+
+	if start > 0 && end > start {
+		filter["price"] = bson.M{"$gte": start, "$lte": end}
+	}
+
+	cursor, err := p.db.Database(Database).Collection(ProductCollection).Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var result []Product
+	if err := cursor.All(ctx, &result); err != nil {
+		return nil, err
+	}
+
+	return result, err
+}
+
+func (p *ProductStore) GetProductImage(ctx context.Context, id string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ID format: %v", err)
+	}
+
+	opts := options.FindOne().SetProjection(bson.M{"image": 1})
+
+	var result bson.M
+	err = p.db.Database(Database).Collection(ProductCollection).FindOne(ctx, bson.M{"_id": objectID}, opts).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+
+	imageData, ok := result["image"].(primitive.Binary)
+	if !ok {
+		return nil, fmt.Errorf("image field not found or is of incorrect type")
+	}
+
+	return imageData.Data, nil
+}

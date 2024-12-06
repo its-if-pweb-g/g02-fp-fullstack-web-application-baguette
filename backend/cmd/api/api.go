@@ -58,22 +58,23 @@ func (app *application) mount() http.Handler {
 
 		r.Post("/register", app.registerUserHandler) // ok
 		r.Post("/login", app.LoginUserHandler) // ok
-		// r.Get("/image/{id}", )
+		r.Get("/image/{id}", app.ImageHandler) 
 
 		// Products
 		r.Route("/products", func(r chi.Router){
-			// r.Get("/", )
-			// r.Get("/search", )
-			// r.Get("/sort", )
-			// r.Get("/{slug}", )
+			r.Get("/", app.ProductsHandler) 
+			r.Get("/search", app.SearchProductHandler)  
+			r.Get("/sort", app.SortProductHandler) 
+			
+			r.Route("/{id}", func(r chi.Router) {
+				r.Get("/", app.DetailProductHandler) 
 
-			r.Route("/{slug}", func(r chi.Router) {
 				r.Use(app.AuthTokenMiddleware) // ok
 				r.Use(app.AdminRoleMiddleware) // ok
 
-				// r.Post("/", )
-				// r.Put("/", )
-				// r.Delete("/", )
+				r.Post("/", app.CreateProductHandler) 
+				r.Put("/", app.UpdateProductHandler) 
+				r.Delete("/", app.DeleteProductHandler) 
 			})
 		})
 
@@ -81,9 +82,11 @@ func (app *application) mount() http.Handler {
 		r.Route("/user", func(r chi.Router) {
 			r.Use(app.AuthTokenMiddleware)
 			
-			// r.Get("/", )
-			// r.Get("/address", )
-			// r.Get("/cart", )
+			r.Get("/", app.UserDetailHandler) 
+			r.Get("/address", app.UserAddressHandler) 
+			r.Get("/cart", app.UserCartHandler) 
+			r.Post("/cart/{id}", app.AddProductToCartHandler) 
+			// r.Post("/pay", app.)
 		})
 	})
 	return r

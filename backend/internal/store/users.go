@@ -17,15 +17,14 @@ var (
 )
 
 type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Name     string             `bson:"name" json:"name"`
-	Email    string             `bson:"email" json:"email"`
-	Password []byte             `bson:"password" json:"password"`
-	Phone    string             `bson:"phone" json:"phone"`
-	Role     string             `bson:"role" json:"role"`
-	Addrres  string             `bson:"address" json:"address"`
+	ID       string `bson:"_id,omitempty" json:"id"`
+	Name     string `bson:"name" json:"name"`
+	Email    string `bson:"email" json:"email"`
+	Password []byte `bson:"password" json:"password"`
+	Phone    string `bson:"phone" json:"phone"`
+	Role     string `bson:"role" json:"role"`
+	Addrres  string `bson:"address" json:"address"`
 }
-
 
 type UserStore struct {
 	db *mongo.Client
@@ -62,6 +61,25 @@ func (s *UserStore) Create(ctx context.Context, user *User) (string, error) {
 	objectID, _ := result.InsertedID.(primitive.ObjectID)
 
 	return objectID.Hex(), nil
+}
+
+func (s *UserStore) Update(ctx context.Context, user *User, user_id string) error {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	objectID, err := primitive.ObjectIDFromHex(user_id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	updateData := bson.M{"$set": user}
+
+	if _, err := s.db.Database(Database).Collection(UserCollection).UpdateOne(ctx, filter, updateData); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *UserStore) GetByEmail(ctx context.Context, email string) (*User, error) {
@@ -123,4 +141,3 @@ func (s *UserStore) GetUserAddress(ctx context.Context, id string) (string, erro
 
 	return result.Address, nil
 }
-
