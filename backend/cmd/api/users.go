@@ -4,8 +4,16 @@ import (
 	"api/internal/store"
 	"errors"
 	"net/http"
+
 )
 
+type UpdateUserPayload struct {
+	Name     string `json:"name,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Phone    string `json:"phone,omitempty"`
+	Role     string `json:"role,omitempty"`
+	Addrres  string `json:"address,omitempty"`
+}
 
 func (app *application) UserDetailHandler(w http.ResponseWriter, r *http.Request) {
 	user, ok := r.Context().Value(userCtx).(*store.User)
@@ -14,9 +22,36 @@ func (app *application) UserDetailHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if err := app.jsonResponse(w, http.StatusOK, user); err != nil {
-		app.internalServerError(w, r, err)
+	user.Password = []byte("")
+
+	writeJSON(w, http.StatusOK, user)
+}
+
+func (app *application) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+	user, ok := r.Context().Value(userCtx).(*store.User)
+	if !ok {
+		app.unauthorizedErrorResponse(w, r, errors.New("you are not registered"))
+		return
 	}
+
+	var payload map[string]any
+	if err := readJSON(w, r, &payload); err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	userData, err := mapToUser(payload)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	if err := app.store.Users.Update(r.Context(), userData, user.ID); err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+
+	writeJSON(w, http.StatusNoContent, nil)
 }
 
 func (app *application) UserAddressHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,9 +79,8 @@ func (app *application) UserCartHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := app.jsonResponse(w, http.StatusOK, cart); err != nil {
-		app.internalServerError(w, r, err)
-	}
+
+	writeJSON(w, http.StatusOK, cart)
 }
 
 func (app *application) AddProductToCartHandler(w http.ResponseWriter, r *http.Request) {
@@ -66,9 +100,10 @@ func (app *application) AddProductToCartHandler(w http.ResponseWriter, r *http.R
 		app.internalServerError(w, r, err)
 		return
 	}
+
+	writeJSON(w, http.StatusOK, nil)
 }
 
 // func (app *application) PaymentHandler(w http.ResponseWriter, r *http.Request) {
 
 // }
-

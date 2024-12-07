@@ -11,19 +11,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-
 type Product struct {
 	ID                string    `bson:"_id,omitempty" json:"id,omitempty"`
 	Name              string    `bson:"name,omitempty" json:"name"`
 	HeaderDescription string    `bson:"header_description,omitempty" json:"header_description"`
-	Description       string    `bson:"description,omitempty" json:"description"`
-	Price             int       `bson:"price,omitempty" json:"price"`
-	Stock             int       `bson:"stock,omitempty" json:"stock"`
-	Sold              int       `bson:"sold,omitempty" json:"sold"`
-	Image             []byte    `bson:"image,omitempty" json:"image"`
-	CreatedAt         time.Time `bson:"created_at,omitempty" json:"created_at"`
-	Type              []string  `bson:"type,omitempty json:type"`
-	Flavor            []string  `bson:"flavor,omitempty" json:"flavor"`
+	Description       string    `bson:"description,omitempty" json:"description,omitempty"`
+	Price             int       `bson:"price,omitempty" json:"price,omitempty"`
+	Stock             int       `bson:"stock,omitempty" json:"stock,omitempty"`
+	Sold              int       `bson:"sold,omitempty" json:"sold,omitempty"`
+	Image             []byte    `bson:"image,omitempty" json:"image,omitempty"`
+	CreatedAt         time.Time `bson:"created_at,omitempty" json:"created_at,omitempty"`
+	Type              []string  `bson:"tipe,omitempty json:tipe,omitempty"`
+	Flavor            []string  `bson:"flavor,omitempty" json:"flavor,omitempty"`
 }
 
 type ProductStore struct {
@@ -84,9 +83,11 @@ func (p *ProductStore) GetDetailProduct(ctx context.Context, id string) (*Produc
 	}
 
 	filter := bson.M{"_id": objectID}
+	projection := bson.M{"image":0}
+	opts := options.FindOne().SetProjection(projection)
 
 	var result Product
-	if err := p.db.Database(Database).Collection(ProductCollection).FindOne(ctx, filter).Decode(&result); err != nil {
+	if err := p.db.Database(Database).Collection(ProductCollection).FindOne(ctx, filter, opts).Decode(&result); err != nil {
 		return nil, err
 	}
 

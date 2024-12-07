@@ -10,7 +10,7 @@ import (
 )
 
 type RegisterUserPayload struct {
-	Username string `json:"username" validate:"required,max=256"`
+	Name     string `json:"name" validate:"required,max=256"`
 	Email    string `json:"email" validate:"required,email,max=256"`
 	Password string `json:"password" validate:"required,min=8,max=256"`
 	Phone    string `json:"phone"`
@@ -44,10 +44,10 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	user := &store.User{
-		Name:  payload.Username,
-		Email: payload.Email,
-		Phone: payload.Phone,
-		Role:  "user",
+		Name:    payload.Name,
+		Email:   payload.Email,
+		Phone:   payload.Phone,
+		Role:    "user",
 		Addrres: "",
 	}
 
@@ -57,10 +57,11 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	resultID, err := app.store.Users.Create(r.Context(), user)
+	
 	if err != nil {
 		switch err {
 		case store.ErrDuplicateEmail:
-			app.badRequestResponse(w, r, err)
+			app.conflictResponse(w, r, err)
 		default:
 			app.internalServerError(w, r, err)
 		}
@@ -68,13 +69,13 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	claims := jwt.MapClaims{
-		"ID":  resultID,
+		"ID":   resultID,
 		"role": "user",
-		"exp": time.Now().Add(app.config.auth.exp).Unix(),
-		"iat": time.Now().Unix(),
-		"nbf": time.Now().Unix(),
-		"iss": app.config.auth.iss,
-		"aud": app.config.auth.iss,
+		"exp":  time.Now().Add(app.config.auth.exp).Unix(),
+		"iat":  time.Now().Unix(),
+		"nbf":  time.Now().Unix(),
+		"iss":  app.config.auth.iss,
+		"aud":  app.config.auth.iss,
 	}
 
 	token, err := app.authenticator.GenerateToken(claims)
@@ -102,7 +103,7 @@ func (app *application) LoginUserHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	result, err := app.store.Users.GetByEmail(r.Context(),payload.Email) 
+	result, err := app.store.Users.GetByEmail(r.Context(), payload.Email)
 	if err != nil {
 		app.internalServerError(w, r, err)
 		return
@@ -113,13 +114,13 @@ func (app *application) LoginUserHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	claims := jwt.MapClaims{
-		"ID":  result.ID,
+		"ID":   result.ID,
 		"role": result.Role,
-		"exp": time.Now().Add(app.config.auth.exp).Unix(),
-		"iat": time.Now().Unix(),
-		"nbf": time.Now().Unix(),
-		"iss": app.config.auth.iss,
-		"aud": app.config.auth.iss,
+		"exp":  time.Now().Add(app.config.auth.exp).Unix(),
+		"iat":  time.Now().Unix(),
+		"nbf":  time.Now().Unix(),
+		"iss":  app.config.auth.iss,
+		"aud":  app.config.auth.iss,
 	}
 
 	token, err := app.authenticator.GenerateToken(claims)

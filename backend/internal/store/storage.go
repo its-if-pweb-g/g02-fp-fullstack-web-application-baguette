@@ -39,11 +39,17 @@ type Storage struct {
 	Transaction interface {
 		GetUserCart(ctx context.Context, user_id string) ([]Cartproduct, error)
 		AddProduct(ctx context.Context, newProduct *Cartproduct, user_id string) error
+		DeleteProduct(ctx context.Context,user_id string, product_id string) error
+		IncrementQuantity(ctx context.Context, user_id string, product_id string) error
+		DecrementQuantity(ctx context.Context, user_id string, product_id string) error
 	}
 }
 
 
 func NewStorage(db *mongo.Client) Storage {
 	return Storage{
+		Users: &UserStore{db},
+		Products: &ProductStore{db},
+		Transaction: &TransactionStore{db},
 	}
 }

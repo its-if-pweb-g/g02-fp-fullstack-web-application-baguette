@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/internal/store"
 	"encoding/json"
 	"net/http"
 
@@ -43,4 +44,34 @@ func (app *application) jsonResponse(w http.ResponseWriter, status int, data any
 	}
 
 	return writeJSON(w, status, &envelope{Data: data})
+}
+
+func mapToProduct(payload map[string]any) (*store.Product, error) {
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	var product store.Product
+	err = json.Unmarshal(jsonData, &product)
+	if err != nil {
+		return nil, err
+	}
+
+	return &product, nil
+}
+
+func mapToUser(payload map[string]any) (*store.User, error) {
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	var user store.User
+	err = json.Unmarshal(jsonData, &user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }

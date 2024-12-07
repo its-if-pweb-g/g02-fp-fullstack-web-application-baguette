@@ -1,0 +1,3 @@
+curl -X DELETE http://localhost:8000/api/products/67540dfd2ce4b1d007be16c9 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY3NTQwOGFkMTA4MjU0Mzk4NjNkY2U3OCIsImF1ZCI6ImJhZ3VldHRlIiwiZXhwIjoxNzMzODE5ODY5LCJpYXQiOjE3MzM1NjA2NjksImlzcyI6ImJhZ3VldHRlIiwibmJmIjoxNzMzNTYwNjY5LCJyb2xlIjoiYWRtaW4ifQ.SnDPHzedJO3dU81N_f4QmFYofjEDXdVioj0tnQmeCJY" \
+  -H "Content-Type: application/json"

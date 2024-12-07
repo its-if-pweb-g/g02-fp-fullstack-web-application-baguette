@@ -15,7 +15,7 @@ import (
 
 func main() {
 	cfg := config{
-		addr:    env.GetString("GO_PORT", ":8000"),
+		addr:   env.GetString("GO_API_URL", "localhost:8000"),
 		apiURL:  env.GetString("GO_API_URL", "localhost:8000"),
 		nextURL: env.GetString("NEXT_URL", "http://localhost:3000"),
 		db: dbConfig{
@@ -55,6 +55,8 @@ func main() {
 	)
 
 	store := store.NewStorage(db)
+
+	addAdmin(store) 
 
 	app := &application{
 		config:        cfg,

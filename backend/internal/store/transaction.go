@@ -17,12 +17,11 @@ type Cartproduct struct {
 }
 
 type Order struct {
-	ID       string        `bson:"_id,omitempty"`
-	UserID   string        `bson:"user_id"`
-	Date     string        `bson:"date"`
-	Status   string        `bson:"status"`
-	Products []Cartproduct `bson:"products"`
-	Address  string        `bson:"address"`
+	ID       string        `bson:"_id,omitempty" json:"id,omitempty"`
+	UserID   string        `bson:"user_id" json:"user_id,omitempty"`
+	Date     string        `bson:"date" json:"date,omitempty"`
+	Products []Cartproduct `bson:"products" json:"products,omitempty"`
+	Address  string        `bson:"address" json:"address,omitempty"`
 }
 
 type TransactionStore struct {
@@ -33,7 +32,7 @@ func (t *TransactionStore) GetUserCart(ctx context.Context, user_id string) ([]C
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
-	filter := bson.M{"user_id": user_id, "status": "cart"}
+	filter := bson.M{"user_id": user_id}
 	opts := options.FindOne().SetProjection(bson.M{"_id": 1, "products": 1})
 
 	var result Order
@@ -49,7 +48,7 @@ func (t *TransactionStore) AddProduct(ctx context.Context, newProduct *Cartprodu
 	defer cancel()
 
 	userCart, err := t.GetUserCart(ctx, user_id)
-	if err != nil {
+	if err != nil && err != mongo.ErrNoDocuments {
 		return err
 	}
 
@@ -59,7 +58,7 @@ func (t *TransactionStore) AddProduct(ctx context.Context, newProduct *Cartprodu
 		}
 	}
 
-	filter := bson.M{"user_id": user_id, "status": "cart"}
+	filter := bson.M{"user_id": user_id}
     update := bson.M{"$push": bson.M{"products": newProduct}}
     opts := options.Update().SetUpsert(true)
 
@@ -70,3 +69,68 @@ func (t *TransactionStore) AddProduct(ctx context.Context, newProduct *Cartprodu
 
 	return nil
 }
+
+func (t *TransactionStore) DeleteProduct(ctx context.Context,user_id string, product_id string) error {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	filter := bson.M{"user_id": user_id, "products.product_id": product_id}
+	update := bson.M{
+        "$pull": bson.M{"products": bson.M{"product_id": product_id}, },
+    }
+
+	_, err := t.db.Database(Database).Collection(TransactionCollection).UpdateOne(ctx, filter, update)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func (t *TransactionStore) IncrementQuantity(ctx context.Context, user_id string, product_id string) error {
+    ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+    defer cancel()
+
+    filter := bson.M{
+        "user_id": user_id,
+        "products.product_id": product_id,
+    }
+
+    update := bson.M{
+        "$inc": bson.M{
+            "products.$.quantity": 1, 
+        },
+    }
+
+    _, err := t.db.Database(Database).Collection(TransactionCollection).UpdateOne(ctx, filter, update)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func (t *TransactionStore) DecrementQuantity(ctx context.Context, user_id string, product_id string) error {
+    ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+    defer cancel()
+
+    filter := bson.M{
+        "user_id": user_id,
+        "products.product_id": product_id,
+    }
+
+    update := bson.M{
+        "$inc": bson.M{
+            "products.$.quantity": -1, 
+        },
+    }
+
+    _, err := t.db.Database(Database).Collection(TransactionCollection).UpdateOne(ctx, filter, update)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+

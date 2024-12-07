@@ -49,46 +49,54 @@ type authConfig struct {
 func (app *application) mount() http.Handler {
 	r := chi.NewRouter()
 
+	// Middleware global
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
-	
+
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("OK"))
+	})
+
 	r.Route("/api", func(r chi.Router) {
+		// Authentication routes
+		r.Post("/register", app.registerUserHandler)
+		r.Post("/login", app.LoginUserHandler)
+		r.Get("/image/{id}", app.ImageHandler)
 
-
-		r.Post("/register", app.registerUserHandler) // ok
-		r.Post("/login", app.LoginUserHandler) // ok
-		r.Get("/image/{id}", app.ImageHandler) 
-
-		// Products
-		r.Route("/products", func(r chi.Router){
-			r.Get("/", app.ProductsHandler) 
-			r.Get("/search", app.SearchProductHandler)  
-			r.Get("/sort", app.SortProductHandler) 
-			
+		// Product routes
+		r.Route("/products", func(r chi.Router) {
+			r.Get("/", app.ProductsHandler)
+			r.Get("/search", app.SearchProductHandler)
+			r.Get("/sort", app.SortProductHandler)
+		
+			r.With(app.AuthTokenMiddleware, app.AdminRoleMiddleware).Post("/", app.CreateProductHandler)
+		
 			r.Route("/{id}", func(r chi.Router) {
-				r.Get("/", app.DetailProductHandler) 
-
-				r.Use(app.AuthTokenMiddleware) // ok
-				r.Use(app.AdminRoleMiddleware) // ok
-
-				r.Post("/", app.CreateProductHandler) 
-				r.Put("/", app.UpdateProductHandler) 
-				r.Delete("/", app.DeleteProductHandler) 
+				r.Get("/", app.DetailProductHandler)
+				r.With(app.AuthTokenMiddleware, app.AdminRoleMiddleware).Put("/", app.UpdateProductHandler)
+				r.With(app.AuthTokenMiddleware, app.AdminRoleMiddleware).Delete("/", app.DeleteProductHandler)
 			})
 		})
+				
 
-		// Users
+		// User routes
 		r.Route("/user", func(r chi.Router) {
 			r.Use(app.AuthTokenMiddleware)
+
+			r.Get("/", app.UserDetailHandler)
+			r.Put("/", app.UpdateUserHandler)
+			r.Get("/address", app.UserAddressHandler)
+			r.Get("/cart", app.UserCartHandler)
+			r.Post("/cart/products", app.AddProductToCartHandler) 
+			r.Delete("/cart/products/{id}", app.DeleteProductInCartHandler)
+			r.Get("/cart/products/inc/{id}", app.IncQuantityHandler)
+			r.Get("/cart/products/dec/{id}", app.DecQuantityHandler)
 			
-			r.Get("/", app.UserDetailHandler) 
-			r.Get("/address", app.UserAddressHandler) 
-			r.Get("/cart", app.UserCartHandler) 
-			r.Post("/cart/{id}", app.AddProductToCartHandler) 
-			// r.Post("/pay", app.)
+			// r.Post("/pay", app.PaymentHandler)
 		})
 	})
+
 	return r
 }
 
