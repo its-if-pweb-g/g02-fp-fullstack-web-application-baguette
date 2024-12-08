@@ -1,54 +1,35 @@
 version: '3.9'
 
 services:
-  # nextapp:
-  #   container_name: nextapp
-  #   image: nextapp:1.0.0
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: dockerfile
-  #   ports:
-  #     - ${NEXT_PORT}:${NEXT_PORT}
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - NEXT_PUBLIC_API_URL=${GO_API_URL}
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - goapp
-  #   develop:
-  #     watch:
-  #       - action: sync
-  #         path: ./frontend
-  #         target: /app
-
-  # goapp:
-  #   container_name: goapp
-  #   image: goapp:1.0.0
-  #   build:
-  #     context: ./backend
-  #     dockerfile: dockerfile
-  #   environment:
-  #     DATABASE_URL: ${DATABASE_URL}
-  #     WAIT_HOST: db:${MONGO_PORT}
-  #   ports:
-  #     - ${GO_PORT}:8000
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - app-network
-  #   develop:
-  #     watch:
-  #       - action: sync+restart 
-  #         path: ./backend
-  #         target: /app
+  goapp:
+    container_name: goapp
+    image: devaartana/app:latest
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      WAIT_HOST: db:${MONGO_PORT}
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - app-network
+    develop:
+      watch:
+        - action: sync+restart 
+          path: ./backend
+          target: /app
 
   db:
     container_name: db
-    image: mongo:latest
+    image: devaartana/db:latest
+    build: 
+      context: ./data
+      dockerfile: dockerfile
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
