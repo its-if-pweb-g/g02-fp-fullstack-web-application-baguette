@@ -73,7 +73,7 @@ func (app *application) UserCartHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	cart, err := app.store.Transaction.GetUserCart(r.Context(), user.ID)
+	_, cart, err := app.store.Transaction.GetUserCart(r.Context(), user.ID)
 	if err != nil {
 		app.internalServerError(w, r, err)
 		return
@@ -96,7 +96,7 @@ func (app *application) AddProductToCartHandler(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	if err := app.store.Transaction.AddProduct(r.Context(), &payload, user.ID); err != nil {
+	if err := app.store.Transaction.AddProduct(r.Context(), payload, user.ID); err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}
@@ -104,6 +104,3 @@ func (app *application) AddProductToCartHandler(w http.ResponseWriter, r *http.R
 	writeJSON(w, http.StatusOK, nil)
 }
 
-// func (app *application) PaymentHandler(w http.ResponseWriter, r *http.Request) {
-
-// }

@@ -37,9 +37,11 @@ type Storage struct {
 		GetProductImage(ctx context.Context, id string) ([]byte, error)
 	}
 	Transaction interface {
-		GetUserCart(ctx context.Context, user_id string) ([]Cartproduct, error)
-		AddProduct(ctx context.Context, newProduct *Cartproduct, user_id string) error
+		GetUserCart(ctx context.Context, user_id string) (string, []Cartproduct, error)
+		CreateUserOrder(ctx context.Context, order Order) (string, error)
+		AddProduct(ctx context.Context, newProduct Cartproduct, user_id string) error
 		DeleteProduct(ctx context.Context,user_id string, product_id string) error
+		MarkTransaction(ctx context.Context, transaction_id string) error
 		IncrementQuantity(ctx context.Context, user_id string, product_id string) error
 		DecrementQuantity(ctx context.Context, user_id string, product_id string) error
 	}

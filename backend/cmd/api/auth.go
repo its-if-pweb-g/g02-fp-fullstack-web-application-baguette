@@ -14,6 +14,7 @@ type RegisterUserPayload struct {
 	Email    string `json:"email" validate:"required,email,max=256"`
 	Password string `json:"password" validate:"required,min=8,max=256"`
 	Phone    string `json:"phone"`
+	Address  string `json:"address"`
 }
 
 type LoginUserPayload struct {
@@ -48,7 +49,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		Email:   payload.Email,
 		Phone:   payload.Phone,
 		Role:    "user",
-		Addrres: "",
+		Addrres: payload.Address,
 	}
 
 	if err := user.SetPassword(payload.Password); err != nil {
@@ -57,7 +58,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	resultID, err := app.store.Users.Create(r.Context(), user)
-	
+
 	if err != nil {
 		switch err {
 		case store.ErrDuplicateEmail:

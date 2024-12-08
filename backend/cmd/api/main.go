@@ -10,13 +10,24 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/joho/godotenv"
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/snap"
 	"go.uber.org/zap"
 )
 
 func main() {
+
+	logger := zap.Must(zap.NewProduction()).Sugar()
+	defer logger.Sync()
+
+	err := godotenv.Load()
+	if err != nil {
+		logger.Info("No .env file found or error loading it: %v", err)
+	}
+
 	cfg := config{
-		addr:   env.GetString("GO_API_URL", "localhost:8000"),
-		apiURL:  env.GetString("GO_API_URL", "localhost:8000"),
+		addr:    env.GetString("GO_API_URL", "localhost:8000"),
 		nextURL: env.GetString("NEXT_URL", "http://localhost:3000"),
 		db: dbConfig{
 			addr:              env.GetString("DATABASE_URL", "mongodb://baguette:bjirlah@localhost:27017"),
@@ -30,10 +41,11 @@ func main() {
 			exp:    time.Hour * time.Duration(env.GetInt("AUTH_EXP", 72)),
 			iss:    env.GetString("AUTH_ISS", "baguette"),
 		},
+		payment: paymentGateway{
+			serverKey: env.GetString("SERVER_KEY", ""),
+			paymentURL: env.GetString("PAYMENT_URL", "https://app.sandbox.midtrans.com/snap/v1/transactions"),
+		},
 	}
-
-	logger := zap.Must(zap.NewProduction()).Sugar()
-	defer logger.Sync()
 
 	db, err := db.New(
 		cfg.db.addr,
@@ -56,7 +68,10 @@ func main() {
 
 	store := store.NewStorage(db)
 
-	addAdmin(store) 
+	addAdmin(store)
+
+	var s snap.Client
+	s.New(cfg.payment.serverKey, midtrans.Sandbox)
 
 	app := &application{
 		config:        cfg,

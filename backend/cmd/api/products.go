@@ -172,7 +172,7 @@ func (app *application) CreateProductHandler(w http.ResponseWriter, r *http.Requ
 		var err error
 		imageData, err = base64.StdEncoding.DecodeString(base64Data[1])
 		if err != nil {
-			app.badRequestResponse(w, r, errors.New("Fail to conver image from base64"))
+			app.badRequestResponse(w, r, errors.New("fail to conver image from base64"))
 			return
 		}
 	}

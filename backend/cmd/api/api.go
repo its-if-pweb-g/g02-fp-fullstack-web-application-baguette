@@ -27,9 +27,9 @@ type application struct {
 type config struct {
 	addr    string
 	db      dbConfig
-	apiURL  string
 	nextURL string
 	auth    authConfig
+	payment paymentGateway
 }
 
 type dbConfig struct {
@@ -44,6 +44,11 @@ type authConfig struct {
 	secret string
 	exp    time.Duration
 	iss    string
+}
+
+type paymentGateway struct {
+	serverKey  string
+	paymentURL string
 }
 
 func (app *application) mount() http.Handler {
@@ -69,16 +74,15 @@ func (app *application) mount() http.Handler {
 			r.Get("/", app.ProductsHandler)
 			r.Get("/search", app.SearchProductHandler)
 			r.Get("/sort", app.SortProductHandler)
-		
+
 			r.With(app.AuthTokenMiddleware, app.AdminRoleMiddleware).Post("/", app.CreateProductHandler)
-		
+
 			r.Route("/{id}", func(r chi.Router) {
 				r.Get("/", app.DetailProductHandler)
 				r.With(app.AuthTokenMiddleware, app.AdminRoleMiddleware).Put("/", app.UpdateProductHandler)
 				r.With(app.AuthTokenMiddleware, app.AdminRoleMiddleware).Delete("/", app.DeleteProductHandler)
 			})
 		})
-				
 
 		// User routes
 		r.Route("/user", func(r chi.Router) {
@@ -87,13 +91,17 @@ func (app *application) mount() http.Handler {
 			r.Get("/", app.UserDetailHandler)
 			r.Put("/", app.UpdateUserHandler)
 			r.Get("/address", app.UserAddressHandler)
-			r.Get("/cart", app.UserCartHandler)
-			r.Post("/cart/products", app.AddProductToCartHandler) 
-			r.Delete("/cart/products/{id}", app.DeleteProductInCartHandler)
-			r.Get("/cart/products/inc/{id}", app.IncQuantityHandler)
-			r.Get("/cart/products/dec/{id}", app.DecQuantityHandler)
-			
-			// r.Post("/pay", app.PaymentHandler)
+			r.Post("/pay", app.ProductPaymentHandler)
+
+			r.Route("/cart", func(r chi.Router) {
+				r.Get("/", app.UserCartHandler)
+				r.Post("/products", app.AddProductToCartHandler)
+				r.Delete("/products/{id}", app.DeleteProductInCartHandler)
+				r.Get("/products/inc/{id}", app.IncQuantityHandler)
+				r.Get("/products/dec/{id}", app.DecQuantityHandler)
+				r.Get("/pay", app.CartPaymentHandler)
+			})
+
 		})
 	})
 
