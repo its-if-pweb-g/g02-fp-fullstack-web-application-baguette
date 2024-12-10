@@ -142,9 +142,7 @@ func (app *application) DetailProductHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	if err := app.jsonResponse(w, http.StatusOK, products); err != nil {
-		app.internalServerError(w, r, err)
-	}
+	writeJSON(w, http.StatusOK, products)
 }
 
 func (app *application) CreateProductHandler(w http.ResponseWriter, r *http.Request) {

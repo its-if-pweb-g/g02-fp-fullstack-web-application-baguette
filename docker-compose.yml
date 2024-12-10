@@ -1,28 +1,28 @@
 version: '3.9'
 
 services:
-  goapp:
-    container_name: goapp
-    image: devaartana/app:latest
-    build:
-      context: ./backend
-      dockerfile: dockerfile
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      WAIT_HOST: db:${MONGO_PORT}
-    ports:
-      - 8000:8000
-    env_file:
-      - .env
-    depends_on:
-      - db
-    networks:
-      - app-network
-    develop:
-      watch:
-        - action: sync+restart 
-          path: ./backend
-          target: /app
+  # goapp:
+  #   container_name: goapp
+  #   image: devaartana/app:latest
+  #   build:
+  #     context: ./backend
+  #     dockerfile: dockerfile
+  #   environment:
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     WAIT_HOST: db:${MONGO_PORT}
+  #   ports:
+  #     - 8000:8000
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - app-network
+  #   develop:
+  #     watch:
+  #       - action: sync+restart 
+  #         path: ./backend
+  #         target: /app
 
   db:
     container_name: db

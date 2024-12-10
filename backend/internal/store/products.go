@@ -21,7 +21,7 @@ type Product struct {
 	Sold              int       `bson:"sold,omitempty" json:"sold,omitempty"`
 	Image             []byte    `bson:"image,omitempty" json:"image,omitempty"`
 	CreatedAt         time.Time `bson:"created_at,omitempty" json:"created_at,omitempty"`
-	Type              []string  `bson:"tipe,omitempty json:tipe,omitempty"`
+	Type              []string  `bson:"type,omitempty json:type,omitempty"`
 	Flavor            []string  `bson:"flavor,omitempty" json:"flavor,omitempty"`
 }
 
