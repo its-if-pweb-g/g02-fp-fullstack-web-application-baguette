@@ -67,9 +67,11 @@ Desember 10, 2024
 
 
 Pembagian tugas:
+
 Frontend:
   - Muhammad Khibban I'tishom
   - Dewa Putu Ananda Taurean Mahesa
+
 Backend: 
   -  I Kadek Arya Deva Artana
 ## Dokumentasi website
