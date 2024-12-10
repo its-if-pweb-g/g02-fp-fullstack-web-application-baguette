@@ -8,7 +8,6 @@ const NavIcons = () => {
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
-    // Mengecek apakah JWT token ada di cookie
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("jwt="));
@@ -20,7 +19,6 @@ const NavIcons = () => {
 
   return (
     <div className="flex items-center gap-4 xl:gap-6">
-      {/* Tampilkan gambar hanya jika ada token */}
       {hasToken && (
         <>
           <Image src="/basket.png" alt="Basket" width={28} height={28} className="cursor-pointer" />
@@ -28,14 +26,13 @@ const NavIcons = () => {
         </>
       )}
 
-      {/* Tampilkan tombol hanya jika tidak ada token */}
       {!hasToken && (
         <>
-          <button className="font-medium border-2 border-accent text-white bg-transparent px-4 py-2 rounded-md hover:bg-accent hover:text-white hover:opacity-80 transition">
-            <Link href="/login">Masuk</Link>            
+          <button className="w-24 font-medium border-2 border-accent text-white bg-transparent px-4 py-2 rounded-md hover:bg-accent hover:text-white hover:opacity-80 transition">
+            Masuk
           </button>
-          <button className="font-medium bg-accent text-white px-4 py-2 rounded-md hover:opacity-80 transition">
-            <Link href="/register">Daftar</Link>
+          <button className="w-24 font-medium bg-accent border-2 border-accent text-white px-4 py-2 rounded-md hover:opacity-80 transition">
+            Daftar
           </button>
         </>
       )}
