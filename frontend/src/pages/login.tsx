@@ -1,11 +1,48 @@
 import Image from "next/image";
-import localFont from "next/font/local";
-import Navbar from "../components/Navbar";
-import NavIcons from "../components/NavIcons";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Menu from "../components/Menu";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router"; 
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error("API_BASE_URL is not defined in the environment variables");
+}
 
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    const userData = {
+      email,
+      password
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to login user");
+      }
+      const data = await response.json();
+      Cookies.set("token", data.token, { expires: 7 }); 
+      router.push("/")
+
+    } catch (error) {
+      console.error("Login failed", error);
+    }
+  };
     return (
       <div className="bg-primary h-lvh">
         {/* {Navbar} */}
@@ -24,7 +61,7 @@ export default function Home() {
         <div className="items-center flex flex-col">
           <div className="w-[764px] h-[340px] bg-primary px-6 py-6">
             <h1 className="text-2xl font-bold text-customBlack mb-6">Masuk</h1>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="email"
@@ -35,8 +72,10 @@ export default function Home() {
                 <input
                   type="email"
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Eren@gmail.com"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="mb-6">
@@ -49,8 +88,10 @@ export default function Home() {
                 <input
                   type="password"
                   id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="**********"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="flex items-center justify-between">

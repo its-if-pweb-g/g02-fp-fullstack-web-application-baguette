@@ -29,10 +29,10 @@ const NavIcons = () => {
       {!hasToken && (
         <>
           <button className="w-24 font-medium border-2 border-accent text-white bg-transparent px-4 py-2 rounded-md hover:bg-accent hover:text-white hover:opacity-80 transition">
-            Masuk
+            <Link href="/login">Masuk</Link>
           </button>
           <button className="w-24 font-medium bg-accent border-2 border-accent text-white px-4 py-2 rounded-md hover:opacity-80 transition">
-            Daftar
+            <Link href="/register">Daftar</Link>
           </button>
         </>
       )}

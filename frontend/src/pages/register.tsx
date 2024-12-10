@@ -15,7 +15,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const router =useRouter();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission
@@ -79,7 +79,7 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Eren@gmail.com"
-                className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
               />
             </div>
             <div className="mb-4">
@@ -95,7 +95,7 @@ export default function Home() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Eren"
-                className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
               />
             </div>
             <div className="mb-6">
@@ -111,7 +111,7 @@ export default function Home() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="**********"
-                className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
               />
             </div>
             <div className="mb-4">
@@ -127,7 +127,7 @@ export default function Home() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="081234567890"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
             <div className="flex items-center justify-between">

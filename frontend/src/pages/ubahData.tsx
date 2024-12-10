@@ -25,7 +25,7 @@ export default function Home() {
                   type="text"
                   id="Nama"
                   placeholder="Eren"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="mb-4">
@@ -38,7 +38,7 @@ export default function Home() {
                 <input
                   type="date"
                   id="Tanggal Lahir"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="mb-4">
@@ -52,7 +52,7 @@ export default function Home() {
                   type="text"
                   id="jenisKelamin"
                   placeholder=""
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="mb-4">
@@ -66,7 +66,7 @@ export default function Home() {
                   type="text"
                   id="Nama"
                   placeholder="Perumdos"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="mb-4">
@@ -80,7 +80,7 @@ export default function Home() {
                   type="email"
                   id="email"
                   placeholder="Eren@gmail.com"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="mb-4">
@@ -94,7 +94,7 @@ export default function Home() {
                   type="number"
                   id="telepon"
                   placeholder="081234567890"
-                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166] text-customBlack"
                 />
               </div>
               <div className="flex items-center justify-center">

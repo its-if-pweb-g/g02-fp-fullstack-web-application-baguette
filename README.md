@@ -1,14 +1,14 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/K32wTABb)
 # G02-Final-Project: Fullstack Web Application
 
-## Nama Kelompok : `tulis nama kelompok`
+## Nama Kelompok : `baguette`
 
 ## Anggota Kelompok
-| NRP | Nama |
+| NRP   | Nama |
 |:-----------:|:--------:|
-| 5025231126  | Muhammad Khibban I'tishom  |
-| 5025231157  | I Kadek Arya Deva Artana  |
-| 5025231158  | Dewa Putu Ananda Taurean Mahesa  |
+| 50255231158 | Dewa Putu Ananda Taurean Mahesa |
+| 50255231127 | I Kadek Arya Deva Artana        |
+| 50255231126 | Muhammad Khibban I'tishom       |
 
 ## Aplikasi Web yang dibuat
 E-commerce
