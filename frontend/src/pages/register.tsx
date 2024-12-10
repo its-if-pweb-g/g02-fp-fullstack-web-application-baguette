@@ -1,9 +1,5 @@
 import Image from "next/image";
-import localFont from "next/font/local";
-import Navbar from "../components/Navbar";
-import NavIcons from "../components/NavIcons";
 import Link from "next/link";
-import Menu from "../components/Menu";
 
 export default function Home() {
     return (
@@ -23,7 +19,7 @@ export default function Home() {
         {/*  */}
         <div className="items-center flex flex-col">
           <div className="w-[764px] h-[340px] bg-primary px-6 py-6">
-            <h1 className="text-2xl font-bold text-customBlack mb-6">Masuk</h1>
+            <h1 className="text-2xl font-bold text-customBlack mb-6">Daftar</h1>
             <form>
               <div className="mb-4">
                 <label
@@ -36,6 +32,20 @@ export default function Home() {
                   type="email"
                   id="email"
                   placeholder="Eren@gmail.com"
+                  className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-customBlack font-bold mb-2"
+                >
+                  Nama Lengkap
+                </label>
+                <input
+                  type="text"
+                  id="Nama"
+                  placeholder="Eren"
                   className="w-full px-4 py-2 border border-customBlack rounded focus:outline-none focus:ring-2 focus:ring-[#FFD166]"
                 />
               </div>
@@ -60,11 +70,6 @@ export default function Home() {
                 >
                   Kirim
                 </button>
-                <p className="text-sm text-gray-600 ml-4">
-                  <Link href="/register" className="text-secondary-dark underline">
-                  Tidak punya akun?{" "}Daftar sekarang.
-                  </Link>
-                </p>
               </div>
             </form>
           </div>

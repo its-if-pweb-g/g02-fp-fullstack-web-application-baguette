@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -31,10 +32,10 @@ const NavIcons = () => {
       {!hasToken && (
         <>
           <button className="font-medium border-2 border-accent text-white bg-transparent px-4 py-2 rounded-md hover:bg-accent hover:text-white hover:opacity-80 transition">
-            Masuk
+            <Link href="/login">Masuk</Link>            
           </button>
           <button className="font-medium bg-accent text-white px-4 py-2 rounded-md hover:opacity-80 transition">
-            Daftar
+            <Link href="/register">Daftar</Link>
           </button>
         </>
       )}
