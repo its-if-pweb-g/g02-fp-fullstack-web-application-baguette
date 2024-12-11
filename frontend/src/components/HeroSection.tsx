@@ -16,13 +16,12 @@ const images = [
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Automatically change the image every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
+    }, 5000); 
 
-    return () => clearInterval(interval); // Cleanup interval on unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (

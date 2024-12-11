@@ -4,6 +4,7 @@ import { API_URL } from '@/utils/config';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 interface Product {
   name: string;
@@ -222,6 +223,7 @@ const AdminProductEdit = () => {
           </div>
         </form>
       </div>
+      <Footer/>
     </div>
   );
 };

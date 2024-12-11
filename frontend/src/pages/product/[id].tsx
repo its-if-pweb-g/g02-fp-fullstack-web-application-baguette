@@ -4,6 +4,7 @@ import { API_URL } from '@/utils/config';
 import Navbar from '@/components/Navbar';
 import Cookies from 'js-cookie';
 import BuyProductButton from '@/components/BuyProductButton';
+import Footer from '@/components/Footer';
 
 interface Product {
     name: string;
@@ -152,6 +153,7 @@ const ProductDetail = () => {
                     </div>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 };

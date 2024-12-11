@@ -4,6 +4,7 @@ import { API_URL } from '@/utils/config';
 import Navbar from '@/components/Navbar';
 import { Poppins } from "next/font/google";
 import HeroSection from '@/components/HeroSection';
+import Footer from '@/components/Footer';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -151,6 +152,7 @@ const HomePage = () => {
           </div>
         </section>
       </div>
+      <Footer/>
     </div>
   );
 };

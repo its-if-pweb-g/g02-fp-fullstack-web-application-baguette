@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { API_URL } from "@/utils/config";
 import ProductCard from "@/components/ProductCard";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 interface Product {
   name: string;
@@ -62,6 +63,7 @@ const ProductPage = () => {
           )}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
