@@ -2,7 +2,6 @@ package store
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,7 +11,7 @@ import (
 )
 
 type Cartproduct struct {
-	ProductID string `bson:"product_id,omitempty" json:"product_id"`
+	ProductID string `bson:"product_id,omitempty" json:"id"`
 	Name      string `bson:"name" json:"name"`
 	Price     int    `bson:"price,omitempty" json:"price"`
 	Quantity  int    `bson:"quantity,omitempty" json:"quantity"`
@@ -86,10 +85,18 @@ func (t *TransactionStore) AddProduct(ctx context.Context, newProduct Cartproduc
 		if _, err := t.CreateUserOrder(ctx, newOrder); err != nil {
 			return err
 		}
+
+		return nil
 	} else {
 		for _, product := range userCart {
 			if product.ProductID == newProduct.ProductID {
-				return errors.New("product already exist")
+				err := t.IncrementQuantity(ctx, user_id, product.ProductID, newProduct.Quantity)
+
+				if err != nil {
+					return err
+				}
+
+				return nil
 			}
 		}
 	}
@@ -146,7 +153,7 @@ func (t *TransactionStore) DeleteProduct(ctx context.Context, user_id string, pr
 	return nil
 }
 
-func (t *TransactionStore) IncrementQuantity(ctx context.Context, user_id string, product_id string) error {
+func (t *TransactionStore) IncrementQuantity(ctx context.Context, user_id string, product_id string, q int) error {
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
 	defer cancel()
 
@@ -158,7 +165,7 @@ func (t *TransactionStore) IncrementQuantity(ctx context.Context, user_id string
 
 	update := bson.M{
 		"$inc": bson.M{
-			"products.$.quantity": 1,
+			"products.$.quantity": q,
 		},
 	}
 

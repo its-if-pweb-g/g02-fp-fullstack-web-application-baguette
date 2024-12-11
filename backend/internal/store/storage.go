@@ -42,7 +42,7 @@ type Storage struct {
 		AddProduct(ctx context.Context, newProduct Cartproduct, user_id string) error
 		DeleteProduct(ctx context.Context,user_id string, product_id string) error
 		MarkTransaction(ctx context.Context, transaction_id string) error
-		IncrementQuantity(ctx context.Context, user_id string, product_id string) error
+		IncrementQuantity(ctx context.Context, user_id string, product_id string, q int) error
 		DecrementQuantity(ctx context.Context, user_id string, product_id string) error
 	}
 }

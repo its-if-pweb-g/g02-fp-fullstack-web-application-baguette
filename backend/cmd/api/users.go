@@ -34,19 +34,13 @@ func (app *application) UpdateUserHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	var payload map[string]any
+	var payload store.User
 	if err := readJSON(w, r, &payload); err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
-	userData, err := mapToUser(payload)
-	if err != nil {
-		app.badRequestResponse(w, r, err)
-		return
-	}
-
-	if err := app.store.Users.Update(r.Context(), userData, user.ID); err != nil {
+	if err := app.store.Users.Update(r.Context(), &payload, user.ID); err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}

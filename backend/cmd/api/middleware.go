@@ -15,18 +15,20 @@ type userKey string
 const userCtx userKey = "user"
 
 func (app *application) corsMiddleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Access-Control-Allow-Origin", "*") // Atau domain tertentu
-        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ngrok-skip-browser-warning")
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ngrok-skip-browser-warning")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 
-        if r.Method == http.MethodOptions {
-            w.WriteHeader(http.StatusOK)
-            return
-        }
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 
-        next.ServeHTTP(w, r)
-    })
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
@@ -43,6 +45,7 @@ func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
 
 		if tokenHeader == "" {
 			cookie, err := r.Cookie("token")
+			fmt.Print(cookie)
 			if err != nil {
 				if err == http.ErrNoCookie {
 					app.unauthorizedErrorResponse(w, r, fmt.Errorf("auth token is missing"))
@@ -78,7 +81,6 @@ func (app *application) AuthTokenMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-
 func (app *application) AdminRoleMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, _ := r.Context().Value(userCtx).(*store.User)
@@ -91,5 +93,3 @@ func (app *application) AdminRoleMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
-

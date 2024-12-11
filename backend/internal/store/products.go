@@ -2,7 +2,7 @@ package store
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -190,7 +190,7 @@ func (p *ProductStore) GetProductImage(ctx context.Context, id string) ([]byte, 
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return nil, fmt.Errorf("invalid ID format: %v", err)
+		return nil, err
 	}
 
 	opts := options.FindOne().SetProjection(bson.M{"image": 1})
@@ -203,7 +203,7 @@ func (p *ProductStore) GetProductImage(ctx context.Context, id string) ([]byte, 
 
 	imageData, ok := result["image"].(primitive.Binary)
 	if !ok {
-		return nil, fmt.Errorf("image field not found or is of incorrect type")
+		return nil, errors.New("image field not found or is of incorrect type")
 	}
 
 	return imageData.Data, nil

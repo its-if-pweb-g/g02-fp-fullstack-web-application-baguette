@@ -222,7 +222,7 @@ func (app *application) UpdateProductHandler(w http.ResponseWriter, r *http.Requ
 			app.badRequestResponse(w, r, errors.New("invalid base64 image format"))
 			return
 		}
-		
+
 		imageBinary, err := base64.StdEncoding.DecodeString(base64Data[1])
 		if err != nil {
 			app.badRequestResponse(w, r, err)
@@ -274,6 +274,10 @@ func (app *application) DeleteProductInCartHandler(w http.ResponseWriter, r *htt
 
 }
 
+type IncPayload struct {
+	Quantity int `json:"quantity"`
+}
+
 func (app *application) IncQuantityHandler(w http.ResponseWriter, r *http.Request) {
 	product_id := chi.URLParam(r, "id")
 
@@ -283,12 +287,18 @@ func (app *application) IncQuantityHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	if err := app.store.Transaction.IncrementQuantity(r.Context(), user.ID, product_id); err != nil {
-		app.internalServerError(w, r, err)
-		return 
+	var payload IncPayload
+	if err := readJSON(w, r, &payload); err != nil {
+		app.badRequestResponse(w, r, err)
+		return
 	}
 
-	writeJSON(w, http.StatusNoContent, nil)
+	if err := app.store.Transaction.IncrementQuantity(r.Context(), user.ID, product_id, payload.Quantity); err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+
+	writeJSON(w, http.StatusOK, nil)
 }
 
 func (app *application) DecQuantityHandler(w http.ResponseWriter, r *http.Request) {
@@ -302,7 +312,7 @@ func (app *application) DecQuantityHandler(w http.ResponseWriter, r *http.Reques
 
 	if err := app.store.Transaction.DecrementQuantity(r.Context(), user.ID, product_id); err != nil {
 		app.internalServerError(w, r, err)
-		return 
+		return
 	}
 
 	writeJSON(w, http.StatusNoContent, nil)

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router"; 
-import { API_URL } from "@/utils/config";
 
 const API_BASE_URL = API_URL;
 
@@ -21,7 +20,7 @@ export default function Home() {
 
     const userData = {
       email,
-      password
+      password,
     };
 
     try {
@@ -32,6 +31,7 @@ export default function Home() {
         },
         body: JSON.stringify(userData),
       });
+
 
       if (!response.ok) {
         console.log(userData)
@@ -51,19 +51,19 @@ export default function Home() {
       console.error("Login failed", error);
     }
   };
-    return (
-      <div className="bg-primary h-lvh">
-        {/* {Navbar} */}
-        <div className="h-16 md:h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 bg-secondary-dark">
-            <div className="hidden md:flex items-center justify-center gap-16 h-full">
-                <div>
-                    <Link href="/" className="flex items-center gap-4">
-                    <Image src="/logo.png" alt="" width={28} height={28} />
-                    <div className="text-2xl text-primary">Baguette</div>
-                    </Link>
-                </div>
-            </div>
+  return (
+    <div className="bg-primary h-lvh">
+      {/* {Navbar} */}
+      <div className="h-16 md:h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 bg-secondary-dark">
+        <div className="hidden md:flex items-center justify-center gap-16 h-full">
+          <div>
+            <Link href="/" className="flex items-center gap-4">
+              <Image src="/logo.png" alt="" width={28} height={28} />
+              <div className="text-2xl text-primary">Baguette</div>
+            </Link>
+          </div>
         </div>
+      </div>
 
         {/*  */}
         <div className="items-center flex flex-col">
@@ -105,20 +105,19 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
-                  className="w-24 font-medium border-2 border-accent bg-accent hover:opacity-80 px-4 py-2 rounded-md text-primary  transition"
+                  className="w-24 font-medium border-2 border-accent bg-accent px-4 py-2 rounded-md text-primary  transition"
                 >
                   Kirim
                 </button>
                 <p className="text-sm text-gray-600 ml-4">
                   <Link href="/register" className="text-secondary-dark underline">
                   Tidak punya akun?{" "}Daftar sekarang.
-                  </Link>
-                </p>
-              </div>
-            </form>
-          </div>
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

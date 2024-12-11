@@ -98,7 +98,7 @@ func (app *application) mount() http.Handler {
 				r.Get("/", app.UserCartHandler)
 				r.Post("/products", app.AddProductToCartHandler)
 				r.Delete("/products/{id}", app.DeleteProductInCartHandler)
-				r.Get("/products/inc/{id}", app.IncQuantityHandler)
+				r.Put("/products/inc/{id}", app.IncQuantityHandler)
 				r.Get("/products/dec/{id}", app.DecQuantityHandler)
 				r.Get("/pay", app.CartPaymentHandler)
 			})

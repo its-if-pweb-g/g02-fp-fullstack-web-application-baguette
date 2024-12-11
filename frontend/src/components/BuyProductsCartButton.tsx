@@ -2,12 +2,14 @@ import { API_URL } from "@/utils/config";
 import getCookie from "@/utils/utility";
 
 
+
 const BuyProductsCartButton = () => {
     const handleBuyNow = async () => {
         try {
             const response = await fetch(`${API_URL}/api/user/cart/pay`, {
                 headers: {
-                    Authorization: "Bearer " + getCookie("token"),
+                    'Authorization': "Bearer " + getCookie("token"),
+                    'ngrok-skip-browser-warning': 'true',
                 },
             });
 
@@ -25,10 +27,10 @@ const BuyProductsCartButton = () => {
 
    
     return (
-        <button className="mt-4 px-6 py-2 w-[103px] font-semibold bg-secondary-dark text-white rounded-lg"
+        <button className="mt-4 px-6 py-2 w-[103px] font-semibold bg-[#FFC857] text-white rounded-lg"
             onClick={handleBuyNow}
         >
-            Beli Langsung
+            Beli
         </button>
     );
 };
