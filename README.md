@@ -75,3 +75,7 @@ Frontend:
 Backend: 
   -  I Kadek Arya Deva Artana
 ## Dokumentasi website
+![Dokumentasi1](./assets/webbaguette1.png)\
+![Dokumentasi2](./assets/webbaguette2.png)\
+![Dokumentasi3](./assets/webbaguette3.png)\
+![Dokumentasi4](./assets/webbaguette4.png)\
