@@ -7,7 +7,7 @@
 | NRP   | Nama |
 |:-----------:|:--------:|
 | 50255231158 | Dewa Putu Ananda Taurean Mahesa |
-| 50255231127 | I Kadek Arya Deva Artana        |
+| 50255231157 | I Kadek Arya Deva Artana        |
 | 50255231126 | Muhammad Khibban I'tishom       |
 
 ## Aplikasi Web yang dibuat
@@ -75,4 +75,3 @@ Frontend:
 Backend: 
   -  I Kadek Arya Deva Artana
 ## Dokumentasi website
-`masukkan gambar dari website yang dibuat`
