@@ -90,7 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ name, header_description, pri
         <div className="flex items-center justify-between mt-4 text-sm relative">
           <span className="text-customBlack text-md font-medium">{sold} terjual</span>
           <button
-            className="px-4 py-2 bg-[#FFC857] text-white font-bold rounded-full z-10"
+            className="px-4 py-2 shadow-lg bg-[#FFC857] text-white font-bold rounded-full z-10"
             onClick={() => handleAddToCart(1)}
           >
             Tambah

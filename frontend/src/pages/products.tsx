@@ -63,7 +63,6 @@ const ProductPage = () => {
           )}
         </div>
       </div>
-      <Footer/>
     </div>
   );
 };

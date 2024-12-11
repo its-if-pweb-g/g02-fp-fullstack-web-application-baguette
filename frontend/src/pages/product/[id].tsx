@@ -123,21 +123,21 @@ const ProductDetail = () => {
                         <div className="flex items-center gap-8 mt-2">
                             <button
                                 onClick={handleDecrement}
-                                className="bg-secondary-light text-customBlack font-bold py-2 px-4 rounded"
+                                className="bg-secondary-light shadow-md text-customBlack font-bold py-2 px-4 rounded"
                             >
                                 -
                             </button>
                             <span className="text-xl font-bold">{quantity}</span>
                             <button
                                 onClick={handleIncrement}
-                                className="bg-secondary-light text-customBlack font-bold py-2 px-4 rounded"
+                                className="bg-secondary-light shadow-md text-customBlack font-bold py-2 px-4 rounded"
                             >
                                 +
                             </button>
                         </div>
                         <div className="flex flex-wrap gap-4 items-center mt-4">
                             <button
-                                className="px-4 py-2 bg-accent text-white text-md font-semibold rounded-md z-10"
+                                className="px-4 py-2 bg-accent shadow-lg text-white text-md font-semibold rounded-md z-10"
                                 onClick={() => handleAddToCart(quantity)}
                             >
                                 Tambah ke Keranjang
@@ -153,7 +153,6 @@ const ProductDetail = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
         </div>
     );
 };

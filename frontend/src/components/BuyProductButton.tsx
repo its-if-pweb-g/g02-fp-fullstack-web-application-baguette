@@ -50,7 +50,7 @@ const BuyProductButton: React.FC<ProductPayment> = ({ name, id, quantity, price 
     };
 
     return (
-        <button className="px-6 py-2 w-48 font-semibold bg-secondary-dark text-white rounded-lg"
+        <button className="px-6 py-2 w-48 font-semibold shadow-lg bg-secondary-dark text-white rounded-lg"
             onClick={handleBuyNow}
         >
             Beli Langsung

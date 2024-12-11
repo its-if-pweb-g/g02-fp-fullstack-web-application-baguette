@@ -210,20 +210,19 @@ const AdminProductEdit = () => {
             )}
           </div>
           <div className="flex justify-center space-x-4">
-            <button type="submit" className="bg-accent w-24 text-white font-semibold py-2 px-4 rounded">
+            <button type="submit" className="bg-accent w-24 shadow-lg text-white font-semibold py-2 px-4 rounded">
               Simpan
             </button>
             <button
               type="button"
               onClick={() => router.push('/')}
-              className="bg-customRed w-24 text-white font-semibold py-2 px-4 rounded"
+              className="bg-customRed w-24 shadow-lg text-white font-semibold py-2 px-4 rounded"
             >
               Batal
             </button>
           </div>
         </form>
       </div>
-      <Footer/>
     </div>
   );
 };
