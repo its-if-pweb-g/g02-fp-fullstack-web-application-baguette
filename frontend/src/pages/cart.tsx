@@ -4,7 +4,8 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import BuyProductsCartButton from "@/components/BuyProductsCartButton";
-import CartItem from '@/components/CartItem'
+import CartItem from '@/components/CartItem';
+import Link from "next/link";
 
 
 interface cartItemData {
@@ -89,7 +90,7 @@ const Cart = () => {
                         <button
                             className="border-customBlack text-customBlack font-bold  px-4 rounded-md border-2 bg-white py-2 mt-6"
                         >
-                            Ganti Alamat
+                            <Link href="/ubahData">Ganti Alamat</Link>
                         </button>
                     </div>
                 </div>
