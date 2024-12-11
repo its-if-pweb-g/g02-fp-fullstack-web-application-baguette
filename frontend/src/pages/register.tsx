@@ -3,8 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router"; 
+import { API_URL } from "@/utils/config";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = API_URL;
 
 if (!API_BASE_URL) {
   throw new Error("API_BASE_URL is not defined in the environment variables");
@@ -18,7 +19,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
 
     const userData = {
       name,
@@ -122,7 +123,7 @@ export default function Home() {
                   Nomor Telepon
                 </label>
                 <input
-                  type="number"
+                  type="string"
                   id="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -133,10 +134,15 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <button
                 type="submit"
-                className="w-24 font-medium border-2 border-accent bg-accent px-4 py-2 rounded-md text-primary transition"
+                className="w-24 font-medium border-2 border-accent bg-accent px-4 py-2 rounded-md text-primary hover:opacity-80 transition"
               >
                 Kirim
               </button>
+              <p className="text-sm text-gray-600 ml-4">
+                  <Link href="/login" className="text-secondary-dark underline">
+                  Sudah punya akun?{" "}Masuk di sini.
+                  </Link>
+              </p>
             </div>
           </form>
         </div>

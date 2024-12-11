@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router"; 
+import { API_URL } from "@/utils/config";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = API_URL;
 
 if (!API_BASE_URL) {
   throw new Error("API_BASE_URL is not defined in the environment variables");
@@ -16,7 +17,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault(); 
 
     const userData = {
       email,
@@ -24,7 +25,7 @@ export default function Home() {
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/register`, {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,11 +34,18 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to login user");
+        console.log(userData)
+        response.json().then(data => {
+          alert(data.error);
+        }).catch(() => {
+          alert("Terjadi kesalahan pada server");
+        });
+
+      } else {
+        const data = await response.json();
+        Cookies.set("token", data.token, { expires: 7 });
+        router.push("/")
       }
-      const data = await response.json();
-      Cookies.set("token", data.token, { expires: 7 }); 
-      router.push("/")
 
     } catch (error) {
       console.error("Login failed", error);
@@ -97,7 +105,7 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
-                  className="w-24 font-medium border-2 border-accent bg-accent px-4 py-2 rounded-md text-primary  transition"
+                  className="w-24 font-medium border-2 border-accent bg-accent hover:opacity-80 px-4 py-2 rounded-md text-primary  transition"
                 >
                   Kirim
                 </button>

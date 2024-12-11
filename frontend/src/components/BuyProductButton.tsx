@@ -1,5 +1,6 @@
 import getCookie from "@/utils/utility";
 import { API_URL } from "@/utils/config";
+import { useRouter } from "next/router";
 
 interface ProductPayment {
     id: string;
@@ -9,16 +10,27 @@ interface ProductPayment {
 }
 
 const BuyProductButton: React.FC<ProductPayment> = ({ name, id, quantity, price }) => {
+    const router = useRouter();
+
     const handleBuyNow = async () => {
+        const token = getCookie("token");
+
+        if (!token) {
+            router.push("/register");
+            return;
+        }
+
         try {
+            console.log(id, name, price, quantity);
+
             const response = await fetch(`${API_URL}/api/user/pay`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer " + getCookie("token"),
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    product_id: id,
+                    id: id,
                     name: name,
                     price: price,
                     quantity: quantity,
@@ -30,16 +42,15 @@ const BuyProductButton: React.FC<ProductPayment> = ({ name, id, quantity, price 
             }
 
             const data = await response.json();
-            window.location.href = data.redirect_url
+            window.location.href = data.redirect_url;
         } catch (error) {
             console.error(error);
             alert("Purchase failed. Please try again.");
         }
     };
 
-   
     return (
-        <button className="mt-4 px-6 py-2 w-52 font-semibold bg-secondary-dark text-white rounded-lg"
+        <button className="px-6 py-2 w-48 font-semibold bg-secondary-dark text-white rounded-lg"
             onClick={handleBuyNow}
         >
             Beli Langsung

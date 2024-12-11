@@ -32,8 +32,8 @@ const Filter = ({ onFilterChange }: { onFilterChange: (filters: any) => void }) 
     <div className="bg-secondary-dark text-white p-4 rounded-md shadow-md">
       <div className="mb-4">
         <h2 className="font-bold mb-2">Tipe Roti</h2>
-        <div className="flex flex-wrap gap-4">
-          {["baguettes", "bagel", "cupcakes", "cakes", "rolls", "loaf", "cookies", "muffins", "danish"].map((type) => (
+        <div className="flex flex-wrap gap-4 font-medium">
+          {["pastry", "bagel", "cupcakes", "cakes", "rolls", "loaf", "cookies", "muffins", "danish"].map((type) => (
             <label key={type} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -48,8 +48,8 @@ const Filter = ({ onFilterChange }: { onFilterChange: (filters: any) => void }) 
 
       <div className="mb-4">
         <h2 className="font-bold mb-2">Rasa</h2>
-        <div className="flex flex-wrap gap-4">
-          {["original", "coklat","keju", "stroberi", "mint", "red velvet", "kacang", "kayu manis"].map((flavor) => (
+        <div className="flex flex-wrap gap-4 font-medium">
+          {["original", "coklat", "keju", "vanila", "manis", "asam", "kacang", "kayu manis"].map((flavor) => (
             <label key={flavor} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -64,7 +64,7 @@ const Filter = ({ onFilterChange }: { onFilterChange: (filters: any) => void }) 
 
       <div className="mb-4">
         <h2 className="font-bold mb-2">Harga</h2>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 font-medium">
           {[
             { label: "< Rp 30.000", value: "1" },
             { label: "Rp 30.000 - Rp 60.000", value: "2" },

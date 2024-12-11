@@ -3,11 +3,12 @@ import ProductCard from '@/components/ProductCard';
 import { API_URL } from '@/utils/config';
 import Navbar from '@/components/Navbar';
 import { Poppins } from "next/font/google";
+import HeroSection from '@/components/HeroSection';
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '700'], 
-  variable: '--font-poppins', 
+  weight: ['400', '700'],
+  variable: '--font-poppins',
 });
 
 interface Product {
@@ -23,8 +24,8 @@ const HomePage = () => {
   const [newestProducts, setNewestProducts] = useState<Product[]>([]);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [visibleCount, setVisibleCount] = useState(8);
-  const [loading, setLoading] = useState<boolean>(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTopSellerProducts = async () => {
@@ -34,11 +35,7 @@ const HomePage = () => {
             'ngrok-skip-browser-warning': 'true',
           },
         });
-    
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-    
+
         const data = await response.json();
         setTopSellerProducts(data);
       } catch (error: any) {
@@ -99,50 +96,59 @@ const HomePage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; 
+    return <div>{error}</div>;
   }
 
   return (
     <div>
-      <Navbar /> 
-      <div className="container mx-auto text-customBlack">
+      <Navbar />
+      <HeroSection />
+      <div className="mx-auto text-customBlack px-4 mt-8 mb-8">
         <section>
-          <h2 className="text-2xl font-bold mb-4">Top Seller Products</h2>
-          <div className="flex gap-4 flex-wrap">
-            {topSellerProducts.map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold mb-4 text-customBlack">Produk Top Seller</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {topSellerProducts.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
           </div>
         </section>
 
         <section className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Newest Products</h2>
-          <div className="flex gap-4 flex-wrap">
-            {newestProducts.map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold mb-4 text-customBlack">Produk Terbaru</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {newestProducts.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
           </div>
         </section>
 
         <section className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">All Products</h2>
-          <div className="flex gap-4 flex-wrap">
-            {allProducts.slice(0, visibleCount).map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold mb-4 text-customBlack">Semua Produk</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {allProducts.slice(0, visibleCount).map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
+            {allProducts.length > visibleCount && (
+              <div className="flex justify-center mt-4 mb-4">
+                <button
+                  className="px-4 py-2 bg-accent text-white font-bold rounded-md hover:opacity-80 transition shadow-lg"
+                  onClick={handleShowMore}
+                >
+                  Tampilkan Lebih
+                </button>
+              </div>
+            )}
           </div>
-          {allProducts.length > visibleCount && (
-            <button
-              className="mt-4 px-4 py-2 bg-accent text-white font-bold rounded-md hover:opacity-80 transition"
-              onClick={handleShowMore}
-            >
-              Show More
-            </button>
-          )}
         </section>
       </div>
     </div>

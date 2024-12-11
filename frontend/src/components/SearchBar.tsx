@@ -16,41 +16,29 @@ const SearchBar = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-     
+
     const params = new URLSearchParams();
     if (searchTerm) params.append("q", searchTerm);
     if (filters.type.length) params.append("type", filters.type.join(","));
     if (filters.flavor.length) params.append("flavor", filters.flavor.join(","));
     if (filters.price.length) params.append("price", filters.price.join(","));
-  
-    try {
-      const response = await fetch(`${API_URL}/api/products/search?${params.toString()}`, {
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-        },
-    });
-  
-      const data = await response.json();
-      console.log(data); 
-       
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
-  
-    const filterRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-        if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-            setShowFilter(false);
-        }
+    router.push(`/products?${params.toString()}`);
+  };
+
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setShowFilter(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+  }, []);
 
   return (
     <div className="relative w-full" ref={filterRef}>

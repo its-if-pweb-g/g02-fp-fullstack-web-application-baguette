@@ -12,7 +12,7 @@ const Menu = () => {
         useEffect(() => {
             const token = document.cookie
             .split("; ")
-            .find((row) => row.startsWith("jwt="));
+            .find((row) => row.startsWith("token"));
 
             if (token) {
             setHasToken(true);

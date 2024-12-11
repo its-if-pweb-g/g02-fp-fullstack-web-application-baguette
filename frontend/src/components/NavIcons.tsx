@@ -10,7 +10,7 @@ const NavIcons = () => {
   useEffect(() => {
     const token = document.cookie
       .split("; ")
-      .find((row) => row.startsWith("jwt="));
+      .find((row) => row.startsWith("token"));
 
     if (token) {
       setHasToken(true);
@@ -21,8 +21,12 @@ const NavIcons = () => {
     <div className="flex items-center gap-4 xl:gap-6">
       {hasToken && (
         <>
-          <Image src="/basket.png" alt="Basket" width={28} height={28} className="cursor-pointer" />
-          <Image src="/account.png" alt="Account" width={28} height={28} className="cursor-pointer" />
+          <Link href="/cart">
+            <Image src="/basket.png" alt="Basket" width={28} height={28} className="cursor-pointer" />
+          </Link>
+          <Link href="/ubahData">
+            <Image src="/account.png" alt="Account" width={28} height={28} className="cursor-pointer" />
+          </Link>
         </>
       )}
 
