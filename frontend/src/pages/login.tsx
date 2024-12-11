@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router"; 
+import { API_URL } from "@/utils/config";
 
 const API_BASE_URL = API_URL;
 
@@ -55,7 +56,7 @@ export default function Home() {
     <div className="bg-primary h-lvh">
       {/* {Navbar} */}
       <div className="h-16 md:h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 bg-secondary-dark">
-        <div className="hidden md:flex items-center justify-center gap-16 h-full">
+        <div className="flex items-center justify-center gap-16 h-full">
           <div>
             <Link href="/" className="flex items-center gap-4">
               <Image src="/logo.png" alt="" width={28} height={28} />
@@ -67,7 +68,7 @@ export default function Home() {
 
         {/*  */}
         <div className="items-center flex flex-col">
-          <div className="w-[764px] h-[340px] bg-primary px-6 py-6">
+          <div className="w-full max-w-3xl bg-primary px-6 py-6">
             <h1 className="text-2xl font-bold text-customBlack mb-6">Masuk</h1>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">

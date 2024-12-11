@@ -90,7 +90,7 @@ export default function Home() {
       <Navbar />
       
       <div className="items-center flex flex-col">
-        <div className="w-[764px] h-[340px] bg-primary px-6 py-6">
+        <div className="w-full max-w-3xl bg-primary px-6 py-6">
           <h1 className="text-2xl font-bold text-customBlack mb-6">Ubah Data Diri</h1>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
